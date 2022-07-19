@@ -1,0 +1,3 @@
+O trabalho tem a finalidade de realizar a codificação binária, codificação manchester e codificação manchester diferencial.
+Itens a adquirir:
+
