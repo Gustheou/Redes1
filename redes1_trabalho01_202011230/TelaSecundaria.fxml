@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControleGeral">
+   <children>
+      <ImageView fitHeight="454.0" fitWidth="725.0" layoutX="-4.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Background.png" />
+         </image>
+      </ImageView>
+      <MenuButton fx:id="menuBarMenuButton" layoutX="14.0" layoutY="95.0" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#binariaMenuItem" text="Binaria" />
+          <MenuItem mnemonicParsing="false" onAction="#manchesterMenuItem" text="Manchester" />
+          <MenuItem mnemonicParsing="false" onAction="#manchesterDiferencialMenuItem" text="Manchester diferencial" />
+        </items>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </MenuButton>
+      <TextArea fx:id="graphicTextArea" editable="false" layoutX="301.0" layoutY="36.0" prefHeight="166.0" prefWidth="284.0" style="-fx-background-color: #FFFFFF;">
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor></TextArea>
+      <TextArea fx:id="textTextArea" layoutX="7.0" layoutY="262.0" prefHeight="141.0" prefWidth="118.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="receiverTextArea" editable="false" layoutX="137.0" layoutY="262.0" prefHeight="141.0" prefWidth="116.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="asciiTextArea" editable="false" layoutX="303.0" layoutY="262.0" prefHeight="166.0" prefWidth="132.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="bitsTextArea" editable="false" layoutX="449.0" layoutY="262.0" prefHeight="166.0" prefWidth="135.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <ImageView accessibleRole="BUTTON" fitHeight="27.0" fitWidth="57.0" layoutX="38.0" layoutY="408.0" onMouseClicked="#AplicacaoTransmissora" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+   </children>
+</AnchorPane>

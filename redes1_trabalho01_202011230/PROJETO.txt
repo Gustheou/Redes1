@@ -1,3 +1,10 @@
 O trabalho tem a finalidade de realizar a codificação binária, codificação manchester e codificação manchester diferencial.
-Itens a adquirir:
+[x]Desenhar a tela inicial
+[x]Montar a tela inicial
+[x]Desenhar o plano de fundo da tela secundária
+[x]Montar a tela secundária
+[]Como converter em bits?
+[]Como fazer o gráfico?
+[]Como adaptar para os métodos que serão requisitados?
+
 
