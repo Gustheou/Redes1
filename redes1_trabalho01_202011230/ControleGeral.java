@@ -1,3 +1,5 @@
+import java.util.BitSet;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
@@ -12,7 +14,7 @@ public class ControleGeral {
   @FXML
   private MenuButton menuBarMenuButton;
 
-  private String mensagem, menuItem, mensagemCodificada;
+  private String mensagem, menuItem;
   private int codificacao;
 
   
@@ -35,15 +37,6 @@ public class ControleGeral {
   void AplicacaoTransmissora(MouseEvent event) {  
     menuItem = menuBarMenuButton.getText();
     String mensagemDigitada = textTextArea.getText();
-    setMensagem (mensagemDigitada);
-    //asciiTextArea.setText("");
-    //bitsTextArea.setText("");
-    //receiverTextArea.setText("");
-    //graphicTextArea.setText("");
-    /*if (!menuItem.equals("Binaria") && !menuItem.equals("Manchester") && !menuItem.equals("Manchester D")){
-      System.out.println("Selecione uma codificacao");
-      menuBarMenuButton.setText("Escolha aqui");
-    }*/
     if (menuItem.equals("Binaria")) {
       setCodificacao(0);
     } else if (menuItem.equals("Manchester")){
@@ -61,20 +54,19 @@ public class ControleGeral {
   public void CamadaDeAplicacaoTransmissora (String mensagem) {
     String ascii = mensagem;
     String bits = mensagem;
-    exibirAscii(ascii);
-    exibirBits(bits);
     int tipoDeCodificacao = getCodificacao();
-    char[] mensagemTamanho = mensagem.toCharArray();
-    int[] quadro = new int [mensagemTamanho.length];
-    char[] bitsCharacter = getMensagemCodificada().toCharArray();
+    exibirAscii(ascii);
+    char[] bitsCharacter = exibirBits(bits).toCharArray();
+    int[] quadro = new int [bitsCharacter.length];
     for (int i = 0; i < quadro.length; i++) {
       quadro[i] = Character.getNumericValue(bitsCharacter[i]);
+      System.out.print(quadro[i]);
     }
     CamadaFisicaTransmissora (quadro, tipoDeCodificacao);
   }//Fim do metodo CamadaDeAplicacaoTransmissora
 
   public void CamadaFisicaTransmissora (int quadro[], int tipoDeCodificacao) {
-    int fluxoBrutoDeBits [] = quadro; //ATENÇÃO: trabalhar com BITS!!!
+    int fluxoBrutoDeBits [] = quadro;
     switch (tipoDeCodificacao) {
     case 0 : {//codificao binaria
       fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoBinaria(quadro);
@@ -138,13 +130,21 @@ public class ControleGeral {
   }//fim do CamadaFisicaTransmissoraCodificacaoManchesterDiferencial
 
   public void MeioDeComunicacao (int fluxoBrutoDeBits[]){
-    int[] transmissor = fluxoBrutoDeBits;
+    /*int[] transmissor = fluxoBrutoDeBits;
     int tamanho = transmissor.length;
     int[] receptor = new int [tamanho];
     for (int i = 0; i < tamanho; i++) {
       receptor[i] = transmissor[i];
+    }*/
+    int[] fluxoBrutoDeBitsPontoA, fluxoBrutoDeBitsPontoB;
+    fluxoBrutoDeBitsPontoA = fluxoBrutoDeBits;
+    fluxoBrutoDeBitsPontoB = new int [fluxoBrutoDeBitsPontoA.length];
+    int indexDoFluxoDeBits = 0;
+    while (indexDoFluxoDeBits < fluxoBrutoDeBitsPontoA.length){
+      fluxoBrutoDeBitsPontoB[indexDoFluxoDeBits] += fluxoBrutoDeBitsPontoA[indexDoFluxoDeBits];
+      indexDoFluxoDeBits++;
     }
-    CamadaFisicaReceptora(fluxoBrutoDeBits);
+    CamadaFisicaReceptora(fluxoBrutoDeBitsPontoB);
   }
 
   public void CamadaFisicaReceptora (int quadro[]) {
@@ -178,7 +178,7 @@ public class ControleGeral {
     for (int i = 0, j = 0; i < quadro.length; i+=2) {
       if(quadro[i] == 0 && quadro[i+1] == 1){
       decodificacaoManchester[j] = 0;
-    }
+      }
       if(quadro[i] == 1 && quadro[i+1] == 0){
         decodificacaoManchester[j] = 1;
       }
@@ -216,14 +216,25 @@ public class ControleGeral {
   public void CamadaDeAplicacaoReceptora (int quadro []) {
     String mensagem = "";
     String letra = "";
-    for (int i = 0; i < quadro.length; i++) {
+    int contador = 0;
+    for (int i = 0; i < quadro.length; i++){
+      letra += quadro[i];
+      if (contador == 7) {
+        int ascii = Integer.parseInt(letra);
+        mensagem += ((char) ascii);
+        letra = "";
+        contador = 0;
+      }
+      contador ++;
+    }
+    /*for (int i = 0; i < quadro.length; i++) {
       letra += quadro[i];
       if(letra.length() % 7 == 0){
-        int ascii = Integer.parseInt(letra,2);
+        int ascii = Integer.parseInt(letra);
         mensagem += ((char) ascii);
         letra = "";
       }
-    }
+    }*/
     //chama proxima camada
     AplicacaoReceptora(mensagem);
   }//fim do metodo CamadaDeAplicacaoReceptora
@@ -234,12 +245,6 @@ public class ControleGeral {
 
   public void exibirAscii(String mensagemDigitada){
     char[] mensagem = mensagemDigitada.toCharArray();
-    //char[] mensagem = textTextArea.getText().toCharArray();
-    /*int[] mensagemAscii = new int[mensagem.length];
-    for(int i = 0;i < mensagem.length;i++){
-      mensagemAscii[i] = mensagem[i];
-      asciiTextArea.setText(asciiTextArea.getText() + mensagem[i] + " = " + mensagemAscii[i] + "\n");
-    }*/
     StringBuilder resultadoAscii = new StringBuilder();
     for (char mensagemChar : mensagem) {
       resultadoAscii.append(mensagemChar+" = " + Integer.toString(mensagemChar)+"\n");
@@ -247,7 +252,7 @@ public class ControleGeral {
     }
   }//fim do metodo exibirAscii
   
-  public void exibirBits (String mensagemDigitada) {
+  public String exibirBits (String mensagemDigitada) {
     StringBuilder resultadoBits = new StringBuilder();
     StringBuilder mensagemEmBits = new StringBuilder();
     char[] mensagem = mensagemDigitada.toCharArray();
@@ -256,16 +261,8 @@ public class ControleGeral {
       mensagemEmBits.append(String.format("%8s", Integer.toBinaryString(mensagemChar)).replaceAll(" ", "0"));
       bitsTextArea.setText(resultadoBits.toString());
     }
-    setMensagemCodificada(mensagemEmBits.toString());
+    return mensagemEmBits.toString();
   }//Fim do exibirBits
-
-  public void setMensagem(String mensagem) {
-    this.mensagem = mensagem;
-  }
-
-  public String getMensagem() {
-    return mensagem;
-  }
   
   public void setCodificacao(int codificacao) {
     this.codificacao = codificacao;
@@ -274,13 +271,4 @@ public class ControleGeral {
   public int getCodificacao() {
     return codificacao;
   }
-
-  public void setMensagemCodificada(String mensagemCodificada) {
-    this.mensagemCodificada = mensagemCodificada;
-  }
-
-  public String getMensagemCodificada() {
-    return mensagemCodificada;
-  }
-  
 }
