@@ -2,9 +2,9 @@
 * Autor............: Gustavo Pereira Nunes
 * Matricula........: 202011230
 * Inicio...........: 19/07/2022
-* Ultima alteracao.: data da ultima alteracao realizada no codigo
-* Nome.............: 
-* Funcao...........: descricao do que eh o programa
+* Ultima alteracao.: 05/08/2022
+* Nome.............: Principal
+* Funcao...........: Transitar e exibir as telas. Já o programa tem a função de simular o funcionamento de uma camada física de redes
 *************************************************************** */
 
 import java.io.IOException;
@@ -56,7 +56,7 @@ public class Principal extends Application{
 /* ***************************************************************
 * Metodo: changeScreenPrograma
 * Funcao: trocar a tela inicial para a tela secundaria
-* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um botao
+* Parametros: MouseEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um "botao"
 * Retorno: void
 *************************************************************** */
   public static void changeScreenPrograma (MouseEvent event) {

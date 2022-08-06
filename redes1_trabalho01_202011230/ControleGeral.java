@@ -1,5 +1,11 @@
-import java.util.BitSet;
-
+/* ***************************************************************
+* Autor............: Gustavo Pereira Nunes
+* Matricula........: 202011230
+* Inicio...........: 19/07/2022
+* Ultima alteracao.: data da ultima alteracao realizada no codigo
+* Nome.............: ControleGeral
+* Funcao...........: Realiza o funcionamento por completo da interface (tela secundaria)
+*************************************************************** */
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.MenuButton;
@@ -14,27 +20,54 @@ public class ControleGeral {
   @FXML
   private MenuButton menuBarMenuButton;
 
-  private String mensagem, menuItem;
+  private String menuItem;
   private int codificacao;
 
-  
+/* ***************************************************************
+* Metodo: binariaMenuItem
+* Funcao: Definir o texto ao escolher uma codificacao
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   void binariaMenuItem(ActionEvent event) {
     menuBarMenuButton.setText("Binaria");
-  }
-
-  @FXML
-  void manchesterDiferencialMenuItem(ActionEvent event) {
-    menuBarMenuButton.setText("Manchester D");
-  }
-
+    textTextArea.setPromptText("Digite aqui!");
+  }//Fim do método binariaMenuItem
+  
+/* ***************************************************************
+* Metodo: manchesterMenuItem
+* Funcao: Definir o texto ao escolher uma codificacao
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   void manchesterMenuItem(ActionEvent event) {
     menuBarMenuButton.setText("Manchester");
-  }
+    textTextArea.setPromptText("Digite aqui!");
+  }//Fim do método manchesterMenuItem
 
+/* ***************************************************************
+* Metodo: ManchesterDiferencialMenuItem
+* Funcao: Definir o texto ao escolher uma codificacao
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
+  @FXML
+  void manchesterDiferencialMenuItem(ActionEvent event) {
+    menuBarMenuButton.setText("Manchester D");
+    textTextArea.setPromptText("Digite aqui!");
+  }//Fim do método manchesterDiferencialMenuItem
+
+/* ***************************************************************
+* Metodo: AplicacaoTransmissora
+* Funcao: Iniciar a transmissao, exibindo tabela bits e ascii, convertendo em fluxoDeBits e enviando como parametro para a proxima cada
+* Parametros: MouseEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um "botao" vulgo "SEND"
+* Retorno: void
+*************************************************************** */
   @FXML
   void AplicacaoTransmissora(MouseEvent event) {  
+    setCodificacao(-1);
     menuItem = menuBarMenuButton.getText();
     String mensagemDigitada = textTextArea.getText();
     if (menuItem.equals("Binaria")) {
@@ -49,15 +82,23 @@ public class ControleGeral {
     }
     CamadaDeAplicacaoTransmissora (mensagemDigitada);
     textTextArea.setText("");
-  }
+  }//Fim do metodo AplicacaoTransmissora
 
+/* ***************************************************************
+* Metodo: CamadaDeAplicacaoTransmissora
+* Funcao: Definir o texto ao escolher uma codificacao
+* Parametros: String mensagem = Mensagem que foi digitada pelo usuário
+* Retorno: void
+*************************************************************** */
   public void CamadaDeAplicacaoTransmissora (String mensagem) {
+    System.out.println();
     String ascii = mensagem;
     String bits = mensagem;
     int tipoDeCodificacao = getCodificacao();
     exibirAscii(ascii);
     char[] bitsCharacter = exibirBits(bits).toCharArray();
     int[] quadro = new int [bitsCharacter.length];
+    System.out.print("FluxoDeBits = ");
     for (int i = 0; i < quadro.length; i++) {
       quadro[i] = Character.getNumericValue(bitsCharacter[i]);
       System.out.print(quadro[i]);
@@ -65,28 +106,47 @@ public class ControleGeral {
     CamadaFisicaTransmissora (quadro, tipoDeCodificacao);
   }//Fim do metodo CamadaDeAplicacaoTransmissora
 
+/* ***************************************************************
+* Metodo: CamadaFisicaTransmissora
+* Funcao: Transmitir a mensagem para a codificacao selecionada
+* Parametros: int[] quadro = fluxoDeBits; int tipoDeCodificacao = codificacao escolhida
+* Retorno: void
+*************************************************************** */
   public void CamadaFisicaTransmissora (int quadro[], int tipoDeCodificacao) {
     int fluxoBrutoDeBits [] = quadro;
     switch (tipoDeCodificacao) {
-    case 0 : {//codificao binaria
-      fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoBinaria(quadro);
-      break;
-    }
-    case 1 : {//codificacao manchester
-      fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoManchester(quadro);
-      break;
-    }
-    case 2 : //codificacao manchester diferencial
-      fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoManchesterDiferencial(quadro);
-      break;
+      case 0 : {//codificao binaria
+        fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoBinaria(quadro);
+        break;
+      }//Fim case 0
+      case 1 : {//codificacao manchester
+        fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoManchester(quadro);
+        break;
+      }//Fim case 1
+      case 2 : {//codificacao manchester diferencial
+        fluxoBrutoDeBits = CamadaFisicaTransmissoraCodificacaoManchesterDiferencial(quadro);
+        break;
+      }//Fim case 2
     }//fim do switch/case
     MeioDeComunicacao(fluxoBrutoDeBits);
-  }//fim da classe CamadaFisicaTransmissora
+  }//fim do metodo CamadaFisicaTransmissora
 
+/* ***************************************************************
+* Metodo: CamadaFisicaTransmissoraCodificacaoBinaria
+* Funcao: Codificar o fluxo de bits em binario
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: int = fluxoDeBits em binario
+*************************************************************** */
   public int[] CamadaFisicaTransmissoraCodificacaoBinaria (int quadro[]){
     return quadro;
   }//fim do metodo CamadaFisicaTransmissoraCodificacaoBinaria
 
+/* ***************************************************************
+* Metodo: CamadaFisicaTransmissoraCodificacaoManchester
+* Funcao: Codificar o fluxo de bits em manchester
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: int = fluxoDeBits em manchester
+*************************************************************** */
   public int[] CamadaFisicaTransmissoraCodificacaoManchester (int quadro[]){
     int[] codificacaoManchester = new int[quadro.length*2];
     for (int i = 0, j = 0; i < quadro.length; i++) {
@@ -98,10 +158,16 @@ public class ControleGeral {
         codificacaoManchester[j+1] = 0;
       }
       j+=2;
-    }
+    }//Fim do for
     return codificacaoManchester;
   }//fim do metodo CamadaFisicaTransmissoraCodificacaoManchester
 
+/* ***************************************************************
+* Metodo: CamadaFisicaTransmissoraCodificacaoManchesterDiferencial
+* Funcao: Codificar o fluxo de bits em manchester diferencial
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: int = fluxoDeBits em manchester diferencial
+*************************************************************** */
   public int[] CamadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro[]){
     int[] codificacaoManchesterDiferencial = new int[quadro.length * 2];
     for (int i = 0, j = 0; i < quadro.length; i++) {
@@ -124,18 +190,17 @@ public class ControleGeral {
         }
       }
       j += 2;
-    }
+    }//Fim do for
     return codificacaoManchesterDiferencial;
-    
   }//fim do CamadaFisicaTransmissoraCodificacaoManchesterDiferencial
 
+/* ***************************************************************
+* Metodo: MeioDeComunicacao
+* Funcao: Transferir a mesnagem de um local para o outro
+* Parametros: int[] fluxoBrutoDeBits
+* Retorno: void
+*************************************************************** */
   public void MeioDeComunicacao (int fluxoBrutoDeBits[]){
-    /*int[] transmissor = fluxoBrutoDeBits;
-    int tamanho = transmissor.length;
-    int[] receptor = new int [tamanho];
-    for (int i = 0; i < tamanho; i++) {
-      receptor[i] = transmissor[i];
-    }*/
     int[] fluxoBrutoDeBitsPontoA, fluxoBrutoDeBitsPontoB;
     fluxoBrutoDeBitsPontoA = fluxoBrutoDeBits;
     fluxoBrutoDeBitsPontoB = new int [fluxoBrutoDeBitsPontoA.length];
@@ -145,35 +210,55 @@ public class ControleGeral {
       indexDoFluxoDeBits++;
     }
     CamadaFisicaReceptora(fluxoBrutoDeBitsPontoB);
-  }
+  }//Fim do metodo MeioDeComunicacao
 
+/* ***************************************************************
+* Metodo: CamadaFisicaReceptora
+* Funcao: Chamar a decodificacao específica
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: void
+*************************************************************** */
   public void CamadaFisicaReceptora (int quadro[]) {
     int tipoDeDecodificacao = getCodificacao();
     int fluxoBrutoDeBits []; //ATENÇÃO: trabalhar com BITS!!!
     switch (tipoDeDecodificacao) {
-      case 0 : {//codificao binaria
+      case 0 : {//Decodificao binaria
         fluxoBrutoDeBits = CamadaFisicaReceptoraDecodificacaoBinaria(quadro);
         break;
-      }case 1 :{//codificacao manchester
+      }//Fim do case 0
+      case 1 :{//Decodificacao manchester
         fluxoBrutoDeBits = CamadaFisicaReceptoraDecodificacaoManchester(quadro);
         break;
-      }case 2 :{//codificacao manchester diferencial
+      }//Fim do case 1
+      case 2 :{//Decodificacao manchester diferencial
         fluxoBrutoDeBits = CamadaFisicaReceptoraDecodificacaoManchesterDiferencial(quadro);
         break;
-      }default: {
+      }//Fim do case 2
+      default: {
         fluxoBrutoDeBits = null;
-      }
+      }//Fim do caso default
     }//fim do switch/case
     //chama proxima camada
     CamadaDeAplicacaoReceptora(fluxoBrutoDeBits);
   }//fim do metodo CamadaFisicaTransmissora
 
-  int[] CamadaFisicaReceptoraDecodificacaoBinaria (int quadro []) {
-    //implementacao do algoritmo para DECODIFICAR
+/* ***************************************************************
+* Metodo: CamadaFisicaReceptoraDecodificacaoBinaria
+* Funcao: Decodificar o fluxoDeBits em binario
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: int = fluxoDeBits em binario
+*************************************************************** */
+  public int[] CamadaFisicaReceptoraDecodificacaoBinaria (int quadro []) {
     return quadro;
   }//fim do metodo CamadaFisicaReceptoraDecodificacaoBinaria
 
-  int[] CamadaFisicaReceptoraDecodificacaoManchester (int quadro []) {
+/* ***************************************************************
+* Metodo: CamadaFisicaReceptoraDecodificacaoManchester
+* Funcao: Decodificar o fluxoDeBits se encontra em manchester
+* Parametros: int[] quadro = fluxoDeManchester
+* Retorno: int = fluxoDeBits em bits
+*************************************************************** */
+  public int[] CamadaFisicaReceptoraDecodificacaoManchester (int quadro []) {
     int[] decodificacaoManchester = new int[quadro.length/2];
     for (int i = 0, j = 0; i < quadro.length; i+=2) {
       if(quadro[i] == 0 && quadro[i+1] == 1){
@@ -187,7 +272,13 @@ public class ControleGeral {
     return decodificacaoManchester;
   }//fim do metodo CamadaFisicaReceptoraDecodificacaoManchester
 
-  int[] CamadaFisicaReceptoraDecodificacaoManchesterDiferencial(int quadro[]){
+/* ***************************************************************
+* Metodo: CamadaFisicaReceptoraDecodificacaoManchesterDiferencial
+* Funcao: Decodificar o fluxoDeBits que se encontra em manchester diferencial
+* Parametros: int[] quadro = fluxoDeManchesterDiferencial
+* Retorno: int = fluxoDeBits em bits
+*************************************************************** */
+  public int[] CamadaFisicaReceptoraDecodificacaoManchesterDiferencial(int quadro[]){
     int[] decodificacaoManchesterDiferencial = new int[quadro.length / 2];
     for (int i = 0, j = 0; i < quadro.length; i += 2) {
       if (i == 0) {
@@ -213,6 +304,12 @@ public class ControleGeral {
   return decodificacaoManchesterDiferencial;
   }//fim do CamadaFisicaReceptoraDecodificacaoManchesterDiferencial
 
+/* ***************************************************************
+* Metodo: CamadaDeAplicacaoReceptora
+* Funcao: Pegar o fluxoDeBits e transformar em String
+* Parametros: int[] quadro = fluxoDeBits
+* Retorno: void
+*************************************************************** */
   public void CamadaDeAplicacaoReceptora (int quadro []) {
     String mensagem = "";
     String letra = "";
@@ -220,29 +317,32 @@ public class ControleGeral {
     for (int i = 0; i < quadro.length; i++){
       letra += quadro[i];
       if (contador == 7) {
-        int ascii = Integer.parseInt(letra);
-        mensagem += ((char) ascii);
+        mensagem += (char) binaryToDecimal(letra);
         letra = "";
-        contador = 0;
+        contador = -1;
       }
       contador ++;
     }
-    /*for (int i = 0; i < quadro.length; i++) {
-      letra += quadro[i];
-      if(letra.length() % 7 == 0){
-        int ascii = Integer.parseInt(letra);
-        mensagem += ((char) ascii);
-        letra = "";
-      }
-    }*/
     //chama proxima camada
     AplicacaoReceptora(mensagem);
   }//fim do metodo CamadaDeAplicacaoReceptora
 
+/* ***************************************************************
+* Metodo: AplicacaoReceptora
+* Funcao: Exibir a mensagem decodificada
+* Parametros: String mensagem = mensagem decodificada
+* Retorno: void
+*************************************************************** */
   public void AplicacaoReceptora (String mensagem) {
     receiverTextArea.setText(mensagem);
   }//fim do metodo AplicacaoReceptora
 
+/* ***************************************************************
+* Metodo: exibirAscii
+* Funcao: pegar a mensagem digitada, transformar em ascii e exibir-la
+* Parametros: String mensagemDigitada = mensagem digitada pelo usuário
+* Retorno: void
+*************************************************************** */
   public void exibirAscii(String mensagemDigitada){
     char[] mensagem = mensagemDigitada.toCharArray();
     StringBuilder resultadoAscii = new StringBuilder();
@@ -252,6 +352,12 @@ public class ControleGeral {
     }
   }//fim do metodo exibirAscii
   
+/* ***************************************************************
+* Metodo: exibirBits
+* Funcao: Pegar a mensagem digitada, transformar em bits e exibir-la
+* Parametros: String mensagemDigitada = mensagem digitada pelo usuario
+* Retorno: String = fluxoDeBits
+*************************************************************** */
   public String exibirBits (String mensagemDigitada) {
     StringBuilder resultadoBits = new StringBuilder();
     StringBuilder mensagemEmBits = new StringBuilder();
@@ -263,12 +369,46 @@ public class ControleGeral {
     }
     return mensagemEmBits.toString();
   }//Fim do exibirBits
-  
+
+/* ***************************************************************
+* Metodo: binaryToDecimal
+* Funcao: Pega um numero binario e o transforma para decimal
+* Parametros: String numero = fluxoDeBits
+* Retorno: int valorDecimal = valor convertido de bits para decimal
+*************************************************************** */
+  public static int binaryToDecimal(String numero) {
+    String number = numero;
+    // guarda o valor decimal
+    int valorDecimal = 0;
+    // Iniciando o valor base como 1
+    int base = 1;
+    for (int i = number.length() - 1; i >= 0; i--) {
+      // Se o bit atual for 1
+      if (number.charAt(i) == '1'){
+        valorDecimal += base;
+      }
+      base = base * 2;
+    }
+    return valorDecimal;
+  }//Fim do metodo binaryToDecimal
+
+/* ***************************************************************
+* Metodo: setCodificacao
+* Funcao: guardar a codificacao escolhoda
+* Parametros: int codificacao = numero que representa a codificacao escolhoda
+* Retorno: void
+*************************************************************** */
   public void setCodificacao(int codificacao) {
     this.codificacao = codificacao;
-  }
-
+  }//Fim do metodo setCodificacao
+  
+/* ***************************************************************
+* Metodo: getCodificacao
+* Funcao: recuperar a codificacao escolhida
+* Parametros: void
+* Retorno: int codificacao = codificacao escolhida
+*************************************************************** */
   public int getCodificacao() {
     return codificacao;
-  }
-}
+  }//Fim do metodo getCodigicacao
+}//Fim da classe ControleGeral
