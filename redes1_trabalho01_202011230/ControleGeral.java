@@ -2,20 +2,27 @@
 * Autor............: Gustavo Pereira Nunes
 * Matricula........: 202011230
 * Inicio...........: 19/07/2022
-* Ultima alteracao.: data da ultima alteracao realizada no codigo
+* Ultima alteracao.: 09/08/2022
 * Nome.............: ControleGeral
 * Funcao...........: Realiza o funcionamento por completo da interface (tela secundaria)
 *************************************************************** */
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.shape.Line;
 
 public class ControleGeral {
 
   @FXML
-  private TextArea asciiTextArea, bitsTextArea, receiverTextArea, textTextArea, graphicTextArea;
+  private TextArea asciiTextArea, bitsTextArea, receiverTextArea, textTextArea;
+  @FXML
+  private HBox graphicHBox;
 
   @FXML
   private MenuButton menuBarMenuButton;
@@ -138,6 +145,11 @@ public class ControleGeral {
 * Retorno: int = fluxoDeBits em binario
 *************************************************************** */
   public int[] CamadaFisicaTransmissoraCodificacaoBinaria (int quadro[]){
+    System.out.print("\nBinario: ");
+    for (int z = 0; z<quadro.length;z++){
+      System.out.print(quadro[z]);
+    }
+    show(quadro, graphicHBox);
     return quadro;
   }//fim do metodo CamadaFisicaTransmissoraCodificacaoBinaria
 
@@ -153,12 +165,18 @@ public class ControleGeral {
       if(quadro[i] == 0){
         codificacaoManchester[j] = 0;
         codificacaoManchester[j+1] = 1;
+
       }else{
         codificacaoManchester[j] = 1;
         codificacaoManchester[j+1] = 0;
       }
       j+=2;
     }//Fim do for
+    System.out.print("\nManchester: ");
+    for (int z = 0; z<codificacaoManchester.length;z++){
+      System.out.print(codificacaoManchester[z]);
+    }
+    show(codificacaoManchester, graphicHBox);
     return codificacaoManchester;
   }//fim do metodo CamadaFisicaTransmissoraCodificacaoManchester
 
@@ -169,6 +187,7 @@ public class ControleGeral {
 * Retorno: int = fluxoDeBits em manchester diferencial
 *************************************************************** */
   public int[] CamadaFisicaTransmissoraCodificacaoManchesterDiferencial (int quadro[]){
+    //graphicHBox.
     int[] codificacaoManchesterDiferencial = new int[quadro.length * 2];
     for (int i = 0, j = 0; i < quadro.length; i++) {
       // Caso inicial, baixo-alto
@@ -176,21 +195,29 @@ public class ControleGeral {
         if (quadro[i] == 0) {
           codificacaoManchesterDiferencial[j] = 0;
           codificacaoManchesterDiferencial[j + 1] = 1;
+          //show(codificacaoManchesterDiferencial, graphicHBox);
         } else {
           codificacaoManchesterDiferencial[j] = 1;
           codificacaoManchesterDiferencial[j + 1] = 0;
+          //show(codificacaoManchesterDiferencial, graphicHBox);
         }
       } else {
         if (quadro[i] == quadro[i - 1]) {
           codificacaoManchesterDiferencial[j] = codificacaoManchesterDiferencial[j - 1];
           codificacaoManchesterDiferencial[j + 1] = codificacaoManchesterDiferencial[j - 2];
+          //show(codificacaoManchesterDiferencial, graphicHBox);
         } else {
           codificacaoManchesterDiferencial[j] = codificacaoManchesterDiferencial[j - 2];
           codificacaoManchesterDiferencial[j + 1] = codificacaoManchesterDiferencial[j - 1];
-        }
+        } 
       }
       j += 2;
     }//Fim do for
+    System.out.print("\nManchesterDiferencial: ");
+    for (int z = 0; z<codificacaoManchesterDiferencial.length;z++){
+      System.out.print(codificacaoManchesterDiferencial[z]);
+    }
+    show(codificacaoManchesterDiferencial, graphicHBox);
     return codificacaoManchesterDiferencial;
   }//fim do CamadaFisicaTransmissoraCodificacaoManchesterDiferencial
 
@@ -411,4 +438,41 @@ public class ControleGeral {
   public int getCodificacao() {
     return codificacao;
   }//Fim do metodo getCodigicacao
+
+/* ***************************************************************
+* Metodo: addSinal
+* Funcao: adicionar um line no display
+* Parametros: HBox display= box referente ao gráfico, int current = bit atual, int prev = bit anterior
+* Retorno: void
+*************************************************************** */
+  private static void addSinal(HBox display, int current, int prev) {
+    ObservableList led = display.getChildren();
+    VBox vBox = new VBox();
+    if (current == 0){
+      vBox.setAlignment(Pos.BOTTOM_LEFT);
+    }else {
+      vBox.setAlignment(Pos.TOP_LEFT);
+    }//Fim do if-else
+    if (current != prev && !led.isEmpty()){
+      led.add(0, new Line(0, 0, 0,display.getHeight() - display.getPadding().getTop() - display.getPadding().getBottom() - 1));
+    }//Fim do if
+    vBox.getChildren().add(new Line(0, 0, 50, 0));
+    led.add(0, vBox);
+  }//Fim do metodo addSinal
+
+/* ***************************************************************
+* Metodo: show
+* Funcao: mostrar o display
+* Parametros: HBox display= box referente ao gráfico, int[] bits = fluxo de bits do procedimento selecionado
+* Retorno: void
+*************************************************************** */
+  public static void show(int[] bits, HBox display) {
+    for (int i = bits.length - 1; i >= 0; i--) {
+      if (i == bits.length - 1){
+        addSinal(display, bits[i], 'n');
+      }else{
+        addSinal(display, bits[i], bits[i + 1]);
+      }//fim do if-else
+    }//Fim do for
+  }//Fim do metodo show
 }//Fim da classe ControleGeral

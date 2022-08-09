@@ -3,8 +3,8 @@ O trabalho tem a finalidade de realizar a codificação binária, codificação 
 [x]Montar a tela inicial
 [x]Desenhar o plano de fundo da tela secundária
 [x]Montar a tela secundária
-[]Como converter em bits?
-[]Como fazer o gráfico?
-[]Como adaptar para os métodos que serão requisitados?
-
-
+[x]Como converter em bits?
+[x]Como converter em manchester?
+[x]Como converter em manchester diferencial?
+[x]Como fazer o gráfico?
+[x]Como adaptar para os métodos que serão requisitados?

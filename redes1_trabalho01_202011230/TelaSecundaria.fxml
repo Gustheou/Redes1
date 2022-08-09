@@ -3,10 +3,12 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControleGeral">
@@ -26,10 +28,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </MenuButton>
-      <TextArea fx:id="graphicTextArea" editable="false" layoutX="301.0" layoutY="36.0" prefHeight="166.0" prefWidth="284.0" style="-fx-background-color: #FFFFFF;">
-         <cursor>
-            <Cursor fx:constant="DEFAULT" />
-         </cursor></TextArea>
       <TextArea fx:id="textTextArea" layoutX="7.0" layoutY="262.0" prefHeight="141.0" prefWidth="118.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
          <font>
             <Font size="10.0" />
@@ -67,5 +65,10 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
+      <ScrollPane layoutX="304.0" layoutY="37.0" prefHeight="166.0" prefWidth="279.0" style="-fx-background-color: #FFFFFF;">
+         <content>
+            <HBox fx:id="graphicHBox" prefHeight="139.0" prefWidth="277.0" />
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>
