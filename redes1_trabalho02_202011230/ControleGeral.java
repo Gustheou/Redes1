@@ -6,6 +6,9 @@
 * Nome.............: ControleGeral
 * Funcao...........: Realiza o funcionamento por completo da interface (tela secundaria)
 *************************************************************** */
+import java.util.ArrayList;
+import java.util.Random;
+
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -564,7 +567,42 @@ public class ControleGeral {
   }//Fim do metodo CmadaDeEnlaceDadosTransmissoraEnquadramento
   
   public int[] CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres (int quadro[]){
-  
+    
+    ArrayList enquadramentoContagemCaracteres = new ArrayList<>();
+    System.out.println("\nCaractere:");
+    for (int i = 0; i < quadro.length; i++) {
+      enquadramentoContagemCaracteres.add(quadro[i]);
+      System.out.print(enquadramentoContagemCaracteres.get(i));
+    }
+    System.out.println("\nQuantidade de caractere: "+ enquadramentoContagemCaracteres.size());
+    Random gerador = new Random();
+    int tamanhoDoFluxo = quadro.length;
+    int contador = 0;
+    int numero = 9;
+    while(contador < tamanhoDoFluxo){
+      numero = (gerador.nextInt(tamanhoDoFluxo-contador));
+      if (numero < 0){
+        numero *= -1;
+      } else if (numero == 0) {
+        numero+=2;
+      } else if (numero == 1) {
+        numero+=1;
+      }
+      
+      System.out.println("\nNumero aleatorio: "+numero);
+      enquadramentoContagemCaracteres.add(contador, numero);
+      contador+=numero;
+    }
+    /*numero = gerador.nextInt(tamanhoDoFluxo-contador)%tamanhoDoFluxo;
+    if (numero < 0){
+      numero *= -1;
+    }else if (numero == 0) {
+      numero+=1;
+    }
+    System.out.println("\nNumero aleatorio: "+numero);
+    enquadramentoContagemCaracteres.add(contador, numero);
+    */
+    System.out.println("\nArray: "+ enquadramentoContagemCaracteres);
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
   
@@ -612,7 +650,7 @@ public class ControleGeral {
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramento
   
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres (int quadro[]){
-  
+    
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres
   
