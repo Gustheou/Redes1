@@ -540,69 +540,85 @@ public class ControleGeral {
 
   public void CamadaEnlaceDadosTransmissora (int quadro[], int tipoDeCodificacao, int tipoDeEnquadramento){
     CamadaDeEnlaceDadosTransmissoraEnquadramento(quadro, tipoDeEnquadramento);  
-    CamadaFisicaTransmissora(quadro, tipoDeCodificacao);
+    //CamadaFisicaTransmissora(quadro, tipoDeCodificacao);
   }
   
   public void CamadaDeEnlaceDadosTransmissoraEnquadramento (int quadro[], int enquadramento){
-    int tipoDeEnquadramento = enquadramento;
-    int [] quadroEnquadrado;
-    switch (tipoDeEnquadramento){
+    int [] quadroEnquadrado = quadro;
+    switch (enquadramento){
       case 0: {//Contagem de caracteres
         quadroEnquadrado = CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres(quadro);
         break;
-      }
+      }//Fim case 0
       case 1: {//Insercao de bytes
         quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes(quadro);
         break;
-      }
+      }//Fim case 1
       case 2: {//Insercao de bits
         quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits(quadro);
         break;
-      }
+      }//Fim case 2
       case 3: {//Violacao da camada fisica
         quadroEnquadrado = CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisica(quadro);
         break;
-      }
-    }
+      }//Fim case 3
+    }//Fim do switch case
+    MeioDeComunicacao(quadroEnquadrado);
   }//Fim do metodo CmadaDeEnlaceDadosTransmissoraEnquadramento
   
   public int[] CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres (int quadro[]){
     
-    ArrayList enquadramentoContagemCaracteres = new ArrayList<>();
-    System.out.println("\nCaractere:");
+    
+    /* Estaca 0
+    ArrayList quadroComContagemDeCaracteres = new ArrayList<>();
+    ArrayList numerosUsadoParaContagem = new ArrayList<>();
     for (int i = 0; i < quadro.length; i++) {
-      enquadramentoContagemCaracteres.add(quadro[i]);
-      System.out.print(enquadramentoContagemCaracteres.get(i));
+      quadroComContagemDeCaracteres.add(quadro[i]);
     }
-    System.out.println("\nQuantidade de caractere: "+ enquadramentoContagemCaracteres.size());
     Random gerador = new Random();
-    int tamanhoDoFluxo = quadro.length;
-    int contador = 0;
-    int numero = 9;
-    while(contador < tamanhoDoFluxo){
-      numero = (gerador.nextInt(tamanhoDoFluxo-contador));
-      if (numero < 0){
-        numero *= -1;
-      } else if (numero == 0) {
-        numero+=2;
-      } else if (numero == 1) {
-        numero+=1;
+    int tamanhoDoFluxoDeBits = quadro.length;
+    int index = 0;
+    int numeroGerado = 0;
+    while(index < tamanhoDoFluxoDeBits){
+      numeroGerado = (gerador.nextInt(tamanhoDoFluxoDeBits-index));
+      if (numeroGerado < 0){
+        numeroGerado *= -1;
+      } else if (numeroGerado == 0) {
+        numeroGerado+=2;
+      } else if (numeroGerado == 1) {
+        numeroGerado+=1;
       }
-      
-      System.out.println("\nNumero aleatorio: "+numero);
-      enquadramentoContagemCaracteres.add(contador, numero);
-      contador+=numero;
+      quadroComContagemDeCaracteres.add(index, numeroGerado);
+      index+=numeroGerado;
+      tamanhoDoFluxoDeBits++;
+      numerosUsadoParaContagem.add(numeroGerado);
     }
-    /*numero = gerador.nextInt(tamanhoDoFluxo-contador)%tamanhoDoFluxo;
-    if (numero < 0){
-      numero *= -1;
-    }else if (numero == 0) {
-      numero+=1;
+    int[] quadroEnquadradoContagemDeCaracteres = new int [quadroComContagemDeCaracteres.size()];
+    System.out.println("\nNovo quadro com contagem:");
+    for (int i = 0; i < quadroComContagemDeCaracteres.size();i++) {
+      quadroEnquadradoContagemDeCaracteres[i] = (int)quadroComContagemDeCaracteres.get(i);
+      System.out.print(quadroEnquadradoContagemDeCaracteres[i]);
     }
-    System.out.println("\nNumero aleatorio: "+numero);
-    enquadramentoContagemCaracteres.add(contador, numero);
+    //Dividir em partes
+    ArrayList quandroEnquadrado = new ArrayList<>();
+    int contador = 0;
+    int indexNewPackage = 0;
+    for (int i = 0; i < numerosUsadoParaContagem.size(); i++){
+      for (int j = 0; j < quadroComContagemDeCaracteres.size(); j++) {
+        if ((int) numerosUsadoParaContagem.get(i) == quadroEnquadradoContagemDeCaracteres[j]) {
+          contador = j;
+          ArrayList pacote = new ArrayList<>();
+          while ((int)numerosUsadoParaContagem.get(i+1) != quadroEnquadradoContagemDeCaracteres[contador]){
+            quandroEnquadrado.add(indexNewPackage, quadroEnquadradoContagemDeCaracteres[contador]);
+            contador++;
+          }
+          indexNewPackage++;
+        }
+      }
+    }
     */
-    System.out.println("\nArray: "+ enquadramentoContagemCaracteres);
+
+    //return quadroEnquadradoContagemDeCaracteres;
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
   
