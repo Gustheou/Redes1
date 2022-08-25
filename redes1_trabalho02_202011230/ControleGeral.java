@@ -616,14 +616,56 @@ public class ControleGeral {
         }
       }
     }
+    return quadroEnquadradoContagemDeCaracteres;
     */
 
-    //return quadroEnquadradoContagemDeCaracteres;
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
   
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes (int quadro[]){
-  
+    //Inserção do ç como flag
+    ArrayList newPackage = new ArrayList<>();
+    for (int i = 0; i < quadro.length; i++){{}
+      newPackage.add(i, quadro[i]);
+    }
+    int tamanhoDoFluxoDeBits = quadro.length;
+    int index = 4;//Número para definir o tamanho do quadro
+    char flag = 'ç';
+    newPackage.add(0,flag);
+    while(index < tamanhoDoFluxoDeBits){
+      if (index % 4 == 0){
+        newPackage.add(index, flag);
+        newPackage.add(index+1,flag);
+        index+=4;
+      } else {
+        newPackage.add(index%4,flag);
+        newPackage.add((index%4) + 1,flag);
+        index+=index%4;
+      }
+      tamanhoDoFluxoDeBits++;
+    }
+    newPackage.add(flag);
+    System.out.println("New package: "+ newPackage);
+
+    //dividir para conquistar
+
+    int[] quadroFinal = new int [newPackage.size()];
+    int separador = 0;
+    for (int i = 0; i < newPackage.size(); i++) {
+      ArrayList quadroSeparado = new ArrayList<>();
+      for (int j = 0; j < newPackage.size();j++){
+        if (newPackage.get(j).equals('ç')) {
+          separador++;
+          quadroSeparado.add(newPackage);
+        }
+        if (separador == 2) {
+          separador = 0;
+          quadroFinal[i] = quadroSeparado;
+        }
+      }
+    }
+
+
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes
   
