@@ -121,7 +121,6 @@ public class ControleGeral {
     System.out.println();
     String ascii = mensagem;
     String bits = mensagem;
-    int tipoDeCodificacao = getCodificacao();
     int tipoDeEnquadramento = getEnquadramento();
     exibirAscii(ascii);
     char[] bitsCharacter = exibirBits(bits).toCharArray();
@@ -131,8 +130,7 @@ public class ControleGeral {
       quadro[i] = Character.getNumericValue(bitsCharacter[i]);
       System.out.print(quadro[i]);
     }
-    //CamadaFisicaTransmissora(quadro, tipoDeCodificacao);
-    CamadaEnlaceDadosTransmissora (quadro, tipoDeCodificacao, tipoDeEnquadramento);
+    CamadaEnlaceDadosTransmissora (quadro, tipoDeEnquadramento);
   }//Fim do metodo CamadaDeAplicacaoTransmissora
 
 /* ***************************************************************
@@ -489,6 +487,12 @@ public class ControleGeral {
     }//Fim do for
   }//Fim do metodo show
 
+/* ***************************************************************
+* Metodo: bitsToString
+* Funcao: converter um fluxo de bits em uma String
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: String = conversao
+*************************************************************** */
   public String bitsToString(int[] quadro) {
     String mensagem = "";
     String letra = "";
@@ -510,43 +514,90 @@ public class ControleGeral {
   @FXML
   private MenuButton menuBarEnquadro;
   
+/* ***************************************************************
+* Metodo: caractereMenuItem
+* Funcao: Definir o texto ao escolher um enquadramento
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   public void caractereMenuItem(ActionEvent event) {
     menuBarEnquadro.setText("Caractere");
     textTextArea.setPromptText("Digite aqui!");
   }
 
+/* ***************************************************************
+* Metodo: bytesMenuItem
+* Funcao: Definir o texto ao escolher um enquadramento
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   public void bytesMenuItem(ActionEvent event) {
     menuBarEnquadro.setText("Bytes");
     textTextArea.setPromptText("Digite aqui!");
   }
 
+/* ***************************************************************
+* Metodo: bitsMenuItem
+* Funcao: Definir o texto ao escolher um enquadramento
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   public void bitsMenuItem(ActionEvent event) {
     menuBarEnquadro.setText("Bits");
     textTextArea.setPromptText("Digite aqui!");
   }
 
+/* ***************************************************************
+* Metodo: fisicaMenuItem
+* Funcao: Definir o texto ao escolher um enquadramento
+* Parametros: ActionEvent event = evento que requer uma acao para ser executado, que no caso eh o de apertar um menu item
+* Retorno: void
+*************************************************************** */
   @FXML
   public void fisicaMenuItem(ActionEvent event) {
     menuBarEnquadro.setText("Fisica");
     textTextArea.setPromptText("Digite aqui!");
   }
 
+/* ***************************************************************
+* Metodo: setEnquadramento
+* Funcao: guardar o enquadramento escolhido
+* Parametros: int enquadramento = numero que representa o enquadramento escolhido
+* Retorno: void
+*************************************************************** */
   public void setEnquadramento (int enquadramento){
     this.enquadramento = enquadramento;
-  }
+  }//Fim do metodo setEnquadramento
 
+/* ***************************************************************
+* Metodo: getEnquadramento
+* Funcao: retornar o enquadramento escolhido
+* Parametros: void
+* Retorno: int enquadramento = enquadramento escolhido
+*************************************************************** */
   public int getEnquadramento() {
     return enquadramento;
-  }
+  }//Fim do metodo getEnquadramento
 
-  public void CamadaEnlaceDadosTransmissora (int quadro[], int tipoDeCodificacao, int tipoDeEnquadramento){
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosTransmissora
+* Funcao: transmitir para a camada enlace de dados transmissora
+* Parametros: int enquadramento = numero que representa o enquadramento escolhido
+* Retorno: void
+*************************************************************** */
+  public void CamadaEnlaceDadosTransmissora (int quadro[], int tipoDeEnquadramento){
     CamadaDeEnlaceDadosTransmissoraEnquadramento(quadro, tipoDeEnquadramento);  
-    //CamadaFisicaTransmissora(quadro, tipoDeCodificacao);
-  }
+  }//Fim do metodo CamadaEnlaceDadosTransmissora
   
+/* ***************************************************************
+* Metodo: CamadaDeEnlaceDadosTransmissoraEnquadramento
+* Funcao: Escolher um enquadramento e enquadrar
+* Parametros: int[] quadro = fluxo de bits; int enquadramento = numero que representa o enquadramento escolhido
+* Retorno: void
+*************************************************************** */
   public void CamadaDeEnlaceDadosTransmissoraEnquadramento (int quadro[], int enquadramento){
     int [] quadroEnquadrado = quadro;
     switch (enquadramento){
@@ -569,8 +620,14 @@ public class ControleGeral {
     }//Fim do switch case
     int tipoDeCodificacao = getCodificacao();
     CamadaFisicaTransmissora(quadroEnquadrado, tipoDeCodificacao);
-  }//Fim do metodo CmadaDeEnlaceDadosTransmissoraEnquadramento
+  }//Fim do metodo CamadaDeEnlaceDadosTransmissoraEnquadramento
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
+* Funcao: Enquadrar com contagem de caracteres
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits enquadrado
+*************************************************************** */
   public int[] CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres (int quadro[]){
     ArrayList quadroComContagemDeCaracteres = new ArrayList<>();
     if (getCodificacao() == 0){  
@@ -626,6 +683,12 @@ public class ControleGeral {
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
   
+/* ***************************************************************
+* Metodo: exibirEnquadramentoContagemCaracteres
+* Funcao: Exibir na interface o enquadramento
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: void
+*************************************************************** */
   public void exibirEnquadramentoContagemCaracteres(int[] quadro){
     String mensagem = bitsToString(quadro);
     ArrayList quadroComContagemDeCaracteres = new ArrayList<>();
@@ -654,8 +717,14 @@ public class ControleGeral {
       resultado.append(quadroComContagemDeCaracteres.get(i));    
     }
     enquadramentoTextArea.setText(String.valueOf(resultado));
-  }
+  }//Fim do metodo exibirEnquadramentoContagemCaracteres
 
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes
+* Funcao: Enquadrar com insercao de byte
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits enquadrado
+*************************************************************** */
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes (int quadro[]){
     //Inserção do ç como flag
     ArrayList newPackage = new ArrayList<>();
@@ -716,6 +785,12 @@ public class ControleGeral {
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes
   
+/* ***************************************************************
+* Metodo: exibirEnquadramentoInsercaoDeBytes
+* Funcao: Exibir na interface o enquadramento
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: void
+*************************************************************** */
   public void exibirEnquadramentoInsercaoDeBytes(int[] quadro) {
     String mensagem = bitsToString(quadro);
     ArrayList newPackage = new ArrayList<>();
@@ -745,8 +820,14 @@ public class ControleGeral {
       resultado.append(newPackage.get(i));    
     }
     enquadramentoTextArea.setText(String.valueOf(resultado));
-  }
+  }//Fim do metodo exibirEnquadramentoInsercaoDeBytes
 
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits
+* Funcao: Enquadrar com insercao de bits
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits enquadrado
+*************************************************************** */
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits (int quadro[]){
     ArrayList newPackage = new ArrayList<>();
     for (int i = 0; i < quadro.length; i++){
@@ -780,6 +861,12 @@ public class ControleGeral {
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits
   
+/* ***************************************************************
+* Metodo: exibirEnquadramentoInsercaoDeBits
+* Funcao: Exibir na interface o enquadramento
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: void
+*************************************************************** */
   public void exibirEnquadramentoInsercaoDeBits (int[] quadro) {
     String mensagem = bitsToString(quadro);
     ArrayList newPackage = new ArrayList<>();
@@ -809,7 +896,7 @@ public class ControleGeral {
       resultado.append(newPackage.get(i));    
     }
     enquadramentoTextArea.setText(String.valueOf(resultado));
-  }
+  }//Fim do metodo exibirEnquadramentoInsercaoDeBits
   
 
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisica (int quadro[]){
@@ -826,12 +913,24 @@ public class ControleGeral {
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisicax
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosReceptora
+* Funcao: Receber o quadro enquadrado e passar adiante
+* Parametros: int[] quadro = fluxo de bits enquadrado;
+* Retorno: void
+*************************************************************** */
   public void CamadaEnlaceDadosReceptora (int quadro[]){
     int enquadramento = getEnquadramento();
     CamadaEnlaceDadosReceptoraEnquadramento(quadro, enquadramento);
     //CamadaDeAplicacaoReceptora(quadro);
   }//Fim do metodo CamadaEnlaceDadosReceptora
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosReceptoraEnquadramento
+* Funcao: Escolher um enquadramento e desenquadrar
+* Parametros: int[] quadro = fluxo de bits enquadrado; int enquadramento = numero que representa o enquadramento escolhido
+* Retorno: void
+*************************************************************** */
   public void CamadaEnlaceDadosReceptoraEnquadramento (int quadro[], int enquadramento){
     int quadroDesenquadrado[] = quadro;
     switch (enquadramento){
@@ -855,6 +954,12 @@ public class ControleGeral {
     CamadaDeAplicacaoReceptora(quadroDesenquadrado);
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramento
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres
+* Funcao: Desenquadrar com contagem de caracteres
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits desenquadrado
+*************************************************************** */
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres (int quadro[]){
     ArrayList desenquadrarContagemDeCaractereArray = new ArrayList<>();
     for (int i = 0; i < quadro.length; i++) {//Colocar o vetor em um array para facilitar a remocao
@@ -873,6 +978,12 @@ public class ControleGeral {
     return desenquadradoContagemDeCaractere;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes
+* Funcao: Desenquadrar com contagem de caracteres
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits desenquadrado
+*************************************************************** */
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes (int quadro[]){
     ArrayList desenquadrarContagemDeBytesArray = new ArrayList<>();
     for (int i = 0; i < quadro.length; i++) {
@@ -891,6 +1002,12 @@ public class ControleGeral {
     return desenquadradoInsercaoDeBytes;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes
   
+/* ***************************************************************
+* Metodo: CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBits
+* Funcao: Desenquadrar com contagem de caracteres
+* Parametros: int[] quadro = fluxo de bits
+* Retorno: int[] = fluxo de bits desenquadrado
+*************************************************************** */
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBits (int quadro[]){
     ArrayList desenquadrarInsercaoDeBitsArray = new ArrayList<>();
     for (int i = 0; i < quadro.length; i++) {
@@ -920,5 +1037,4 @@ public class ControleGeral {
     }
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoViolacaoDaCamadaFisica
-  
 }//Fim da classe ControleGeral
