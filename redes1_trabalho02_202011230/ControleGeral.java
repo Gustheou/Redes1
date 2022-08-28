@@ -23,7 +23,7 @@ import javafx.scene.shape.Line;
 public class ControleGeral {
 
   @FXML
-  private TextArea asciiTextArea, bitsTextArea, receiverTextArea, textTextArea;
+  private TextArea asciiTextArea, bitsTextArea, receiverTextArea, textTextArea, enquadramentoTextArea;
   @FXML
   private HBox graphicHBox;
 
@@ -217,17 +217,14 @@ public class ControleGeral {
         if (quadro[i] == 0) {
           codificacaoManchesterDiferencial[j] = 0;
           codificacaoManchesterDiferencial[j + 1] = 1;
-          //show(codificacaoManchesterDiferencial, graphicHBox);
         } else {
           codificacaoManchesterDiferencial[j] = 1;
           codificacaoManchesterDiferencial[j + 1] = 0;
-          //show(codificacaoManchesterDiferencial, graphicHBox);
         }
       } else {
         if (quadro[i] == quadro[i - 1]) {
           codificacaoManchesterDiferencial[j] = codificacaoManchesterDiferencial[j - 1];
           codificacaoManchesterDiferencial[j + 1] = codificacaoManchesterDiferencial[j - 2];
-          //show(codificacaoManchesterDiferencial, graphicHBox);
         } else {
           codificacaoManchesterDiferencial[j] = codificacaoManchesterDiferencial[j - 2];
           codificacaoManchesterDiferencial[j + 1] = codificacaoManchesterDiferencial[j - 1];
@@ -288,7 +285,7 @@ public class ControleGeral {
       }//Fim do caso default
     }//fim do switch/case
     //chama proxima camada
-    CamadaDeAplicacaoReceptora(fluxoBrutoDeBits);
+    CamadaEnlaceDadosReceptora(fluxoBrutoDeBits);
   }//fim do metodo CamadaFisicaTransmissora
 
 /* ***************************************************************
@@ -360,17 +357,10 @@ public class ControleGeral {
 * Retorno: void
 *************************************************************** */
   public void CamadaDeAplicacaoReceptora (int quadro []) {
-    String mensagem = "";
-    String letra = "";
-    int contador = 0;
+    String mensagem = bitsToString(quadro);
+    System.out.println("\n\nResultado final: ");
     for (int i = 0; i < quadro.length; i++){
-      letra += quadro[i];
-      if (contador == 7) {
-        mensagem += (char) binaryToDecimal(letra);
-        letra = "";
-        contador = -1;
-      }
-      contador ++;
+      System.out.print(quadro[i]);
     }
     //chama proxima camada
     AplicacaoReceptora(mensagem);
@@ -499,7 +489,21 @@ public class ControleGeral {
     }//Fim do for
   }//Fim do metodo show
 
-
+  public String bitsToString(int[] quadro) {
+    String mensagem = "";
+    String letra = "";
+    int contador = 0;
+    for (int i = 0; i < quadro.length; i++){
+      letra += quadro[i];
+      if (contador == 7) {
+        mensagem += (char) binaryToDecimal(letra);
+        letra = "";
+        contador = -1;
+      }
+      contador ++;
+    }
+    return mensagem;
+  }
   
   //------Enlace de dados-------//
   
@@ -563,42 +567,42 @@ public class ControleGeral {
         break;
       }//Fim case 3
     }//Fim do switch case
-    MeioDeComunicacao(quadroEnquadrado);
+    int tipoDeCodificacao = getCodificacao();
+    CamadaFisicaTransmissora(quadroEnquadrado, tipoDeCodificacao);
   }//Fim do metodo CmadaDeEnlaceDadosTransmissoraEnquadramento
   
   public int[] CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres (int quadro[]){
-    
-    
-    /* Estaca 0
     ArrayList quadroComContagemDeCaracteres = new ArrayList<>();
-    ArrayList numerosUsadoParaContagem = new ArrayList<>();
-    for (int i = 0; i < quadro.length; i++) {
-      quadroComContagemDeCaracteres.add(quadro[i]);
-    }
-    Random gerador = new Random();
-    int tamanhoDoFluxoDeBits = quadro.length;
-    int index = 0;
-    int numeroGerado = 0;
-    while(index < tamanhoDoFluxoDeBits){
-      numeroGerado = (gerador.nextInt(tamanhoDoFluxoDeBits-index));
-      if (numeroGerado < 0){
-        numeroGerado *= -1;
-      } else if (numeroGerado == 0) {
-        numeroGerado+=2;
-      } else if (numeroGerado == 1) {
-        numeroGerado+=1;
+    if (getCodificacao() == 0){  
+      for (int i = 0; i < quadro.length; i++) {
+        quadroComContagemDeCaracteres.add(quadro[i]);
       }
-      quadroComContagemDeCaracteres.add(index, numeroGerado);
-      index+=numeroGerado;
-      tamanhoDoFluxoDeBits++;
-      numerosUsadoParaContagem.add(numeroGerado);
+      Random gerador = new Random();
+      int tamanhoDoFluxoDeBits = quadro.length;
+      int index = 0;
+      int numeroGerado = 0;
+      while(index < tamanhoDoFluxoDeBits){
+        numeroGerado = (gerador.nextInt(tamanhoDoFluxoDeBits-index));
+        if (numeroGerado < 0){
+          numeroGerado *= -1;
+        } else if (numeroGerado == 0) {
+          numeroGerado+=2;
+        } else if (numeroGerado == 1) {
+          numeroGerado+=1;
+        }
+        quadroComContagemDeCaracteres.add(index, numeroGerado);
+        index+=numeroGerado;
+        tamanhoDoFluxoDeBits++;
+      }
+      int[] quadroEnquadradoContagemDeCaracteres = new int [quadroComContagemDeCaracteres.size()];
+      System.out.println("\nNovo quadro com contagem:");
+      for (int i = 0; i < quadroComContagemDeCaracteres.size();i++) {
+        quadroEnquadradoContagemDeCaracteres[i] = (int)quadroComContagemDeCaracteres.get(i);
+        System.out.print(quadroEnquadradoContagemDeCaracteres[i]);
+      }
+      return quadroEnquadradoContagemDeCaracteres;
     }
-    int[] quadroEnquadradoContagemDeCaracteres = new int [quadroComContagemDeCaracteres.size()];
-    System.out.println("\nNovo quadro com contagem:");
-    for (int i = 0; i < quadroComContagemDeCaracteres.size();i++) {
-      quadroEnquadradoContagemDeCaracteres[i] = (int)quadroComContagemDeCaracteres.get(i);
-      System.out.print(quadroEnquadradoContagemDeCaracteres[i]);
-    }
+    /*
     //Dividir em partes
     ArrayList quandroEnquadrado = new ArrayList<>();
     int contador = 0;
@@ -618,35 +622,78 @@ public class ControleGeral {
     }
     return quadroEnquadradoContagemDeCaracteres;
     */
-
+    exibirEnquadramentoContagemCaracteres(quadro);
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
   
+  public void exibirEnquadramentoContagemCaracteres(int[] quadro){
+    String mensagem = bitsToString(quadro);
+    ArrayList quadroComContagemDeCaracteres = new ArrayList<>();
+    for (int i = 0; i < mensagem.length(); i++) {
+      quadroComContagemDeCaracteres.add(mensagem.charAt(i));
+    }
+    Random gerador = new Random();
+    int tamanhoDoFluxoDeBits = mensagem.length();
+    int index = 0;
+    int numeroGerado = 0;
+    while(index < tamanhoDoFluxoDeBits){
+      numeroGerado = (gerador.nextInt(tamanhoDoFluxoDeBits-index));
+      if (numeroGerado < 0){
+        numeroGerado *= -1;
+      } else if (numeroGerado == 0) {
+        numeroGerado+=2;
+      } else if (numeroGerado == 1) {
+        numeroGerado+=1;
+      }
+      quadroComContagemDeCaracteres.add(index, "["+numeroGerado+"]");
+      index+=numeroGerado;
+      tamanhoDoFluxoDeBits++;
+    }
+    StringBuilder resultado = new StringBuilder();
+    for (int i = 0; i < quadroComContagemDeCaracteres.size(); i++) {
+      resultado.append(quadroComContagemDeCaracteres.get(i));    
+    }
+    enquadramentoTextArea.setText(String.valueOf(resultado));
+  }
+
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes (int quadro[]){
     //Inserção do ç como flag
     ArrayList newPackage = new ArrayList<>();
-    for (int i = 0; i < quadro.length; i++){{}
+    for (int i = 0; i < quadro.length; i++){
       newPackage.add(i, quadro[i]);
     }
-    int tamanhoDoFluxoDeBits = quadro.length;
-    int index = 4;//Número para definir o tamanho do quadro
-    char flag = 'ç';
-    newPackage.add(0,flag);
-    while(index < tamanhoDoFluxoDeBits){
-      if (index % 4 == 0){
-        newPackage.add(index, flag);
-        newPackage.add(index+1,flag);
-        index+=4;
-      } else {
-        newPackage.add(index%4,flag);
-        newPackage.add((index%4) + 1,flag);
-        index+=index%4;
+    if (getCodificacao() == 0){
+      int tamanhoDoFluxoDeBits = quadro.length;
+      int index = 4;//Número para definir o tamanho do quadro
+      char flag = 'ç';
+      newPackage.add(0,flag);
+      while(index < tamanhoDoFluxoDeBits){
+        if (index % 4 == 0){
+          newPackage.add(index, flag);
+          newPackage.add(index+1,flag);
+          index+=4;
+        } else {
+          newPackage.add(index%4,flag);
+          newPackage.add((index%4) + 1,flag);
+          index+=index%4;
+        }
+        tamanhoDoFluxoDeBits++;
       }
-      tamanhoDoFluxoDeBits++;
+      newPackage.add(flag);
+      System.out.println("\nInsercao de byte: "+ newPackage);
+      int[] quadroEnquadradoInsercaoDeBytes = new int [newPackage.size()];
+      for (int i = 0; i < newPackage.size();i++) {
+        if (newPackage.get(i).equals(flag)) {
+          newPackage.remove(i);
+          newPackage.add(i, 11100111);
+        }
+        quadroEnquadradoInsercaoDeBytes[i] = (int)newPackage.get(i);
+      }
+      return quadroEnquadradoInsercaoDeBytes;
     }
-    newPackage.add(flag);
-    System.out.println("New package: "+ newPackage);
+    
 
+    /*
     //dividir para conquistar
 
     int[] quadroFinal = new int [newPackage.size()];
@@ -664,30 +711,130 @@ public class ControleGeral {
         }
       }
     }
-
-
+    */
+    exibirEnquadramentoInsercaoDeBytes(quadro);
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes
   
+  public void exibirEnquadramentoInsercaoDeBytes(int[] quadro) {
+    String mensagem = bitsToString(quadro);
+    ArrayList newPackage = new ArrayList<>();
+    for (int i = 0; i < mensagem.length(); i++){
+      newPackage.add(i, mensagem.charAt(i));
+    }
+    int tamanhoDoFluxoDeBits = mensagem.length();
+    int index = 4;//Número para definir o tamanho do quadro
+    char flag = 'ç';
+    newPackage.add(0,flag);
+    while(index < tamanhoDoFluxoDeBits){
+      if (index % 4 == 0){
+        newPackage.add(index, flag);
+        newPackage.add(index+1,flag);
+        index+=4;
+      } else {
+        newPackage.add(index%4,flag);
+        newPackage.add((index%4) + 1,flag);
+        index+=index%4;
+      }
+      tamanhoDoFluxoDeBits++;
+    }
+    newPackage.add(flag);
+    
+    StringBuilder resultado = new StringBuilder();
+    for (int i = 0; i < newPackage.size(); i++) {
+      resultado.append(newPackage.get(i));    
+    }
+    enquadramentoTextArea.setText(String.valueOf(resultado));
+  }
+
   public int[] CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits (int quadro[]){
-  
+    ArrayList newPackage = new ArrayList<>();
+    for (int i = 0; i < quadro.length; i++){
+      newPackage.add(i, quadro[i]);
+    }
+      int tamanhoDoFluxoDeBits = quadro.length;
+      int index = 4;//Número para definir o tamanho do quadro
+      int flag = 0111110;
+      newPackage.add(0,flag);
+      while(index < tamanhoDoFluxoDeBits){
+        if (index % 4 == 0){
+          newPackage.add(index, flag);
+          newPackage.add(index+1,flag);
+          index+=4;
+        } else {
+          newPackage.add(index%4,flag);
+          newPackage.add((index%4) + 1,flag);
+          index+=index%4;
+        }
+        tamanhoDoFluxoDeBits++;
+      }
+      newPackage.add(flag);
+      System.out.println("Insercao de bits: "+ newPackage);
+      int[] quadroEnquadradoInsercaoDeBits = new int [newPackage.size()];
+      for (int i = 0; i < newPackage.size();i++) {
+        quadroEnquadradoInsercaoDeBits[i] = (int)newPackage.get(i);
+        System.out.print(quadroEnquadradoInsercaoDeBits[i]);
+      }
+
+    exibirEnquadramentoInsercaoDeBits(quadro);
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBits
   
-  public int[] CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisica (int quadro[]){
+  public void exibirEnquadramentoInsercaoDeBits (int[] quadro) {
+    String mensagem = bitsToString(quadro);
+    ArrayList newPackage = new ArrayList<>();
+    for (int i = 0; i < mensagem.length(); i++){
+      newPackage.add(i, mensagem.charAt(i));
+    }
+    int tamanhoDoFluxoDeBits = mensagem.length();
+    int index = 4;//Número para definir o tamanho do quadro
+    String flag = "0111110";
+    newPackage.add(0,flag);
+    while(index < tamanhoDoFluxoDeBits){
+      if (index % 4 == 0){
+        newPackage.add(index, flag);
+        newPackage.add(index+1,flag);
+        index+=4;
+      } else {
+        newPackage.add(index%4,flag);
+        newPackage.add((index%4) + 1,flag);
+        index+=index%4;
+      }
+      tamanhoDoFluxoDeBits++;
+    }
+    newPackage.add(flag);
+    
+    StringBuilder resultado = new StringBuilder();
+    for (int i = 0; i < newPackage.size(); i++) {
+      resultado.append(newPackage.get(i));    
+    }
+    enquadramentoTextArea.setText(String.valueOf(resultado));
+  }
   
+
+  public int[] CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisica (int quadro[]){
+    int sinais = quadro.length / 10;
+    int[] quadroVioladoFisicamente = new int[quadro.length + (sinais * 2)];
+    for (int i = 0, j = 0; i < quadro.length; i++, j++) {
+      if (i % 10 == 0) {
+        quadroVioladoFisicamente[j] = 1;
+        quadroVioladoFisicamente[j + 1] = 1;
+        j++;
+      }
+      quadroVioladoFisicamente[j] = quadro[i];
+    }
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoViolacaoDaCamadaFisicax
   
   public void CamadaEnlaceDadosReceptora (int quadro[]){
-    CamadaEnlaceDadosReceptoraEnquadramento(quadro);
-    CamadaDeAplicacaoReceptora(quadro);
+    int enquadramento = getEnquadramento();
+    CamadaEnlaceDadosReceptoraEnquadramento(quadro, enquadramento);
+    //CamadaDeAplicacaoReceptora(quadro);
   }//Fim do metodo CamadaEnlaceDadosReceptora
   
-  public void CamadaEnlaceDadosReceptoraEnquadramento (int quadro[]){
-    int tipoDeEnquadramento = getEnquadramento();
-    int quadroDesenquadrado[];
-    switch (tipoDeEnquadramento){
+  public void CamadaEnlaceDadosReceptoraEnquadramento (int quadro[], int enquadramento){
+    int quadroDesenquadrado[] = quadro;
+    switch (enquadramento){
       case 0: {//Contagem de caracteres
         quadroDesenquadrado = CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres(quadro);
         break;
@@ -705,25 +852,72 @@ public class ControleGeral {
         break;
       }
     }//Fim do switch-case
+    CamadaDeAplicacaoReceptora(quadroDesenquadrado);
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramento
   
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres (int quadro[]){
-    
-    return quadro;
+    ArrayList desenquadrarContagemDeCaractereArray = new ArrayList<>();
+    for (int i = 0; i < quadro.length; i++) {//Colocar o vetor em um array para facilitar a remocao
+      desenquadrarContagemDeCaractereArray.add(i, quadro[i]);
+    }
+    for (int j = 0; j < desenquadrarContagemDeCaractereArray.size();j++) {
+      if ((int)desenquadrarContagemDeCaractereArray.get(j) > 1){
+        desenquadrarContagemDeCaractereArray.remove(j);
+        j--;
+      }
+    }
+    int[] desenquadradoContagemDeCaractere = new int[desenquadrarContagemDeCaractereArray.size()];
+    for (int z = 0; z < desenquadradoContagemDeCaractere.length; z++) {
+      desenquadradoContagemDeCaractere[z] = (int) desenquadrarContagemDeCaractereArray.get(z);
+    } 
+    return desenquadradoContagemDeCaractere;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoContagemDeCaracteres
   
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes (int quadro[]){
-  
-    return quadro;
+    ArrayList desenquadrarContagemDeBytesArray = new ArrayList<>();
+    for (int i = 0; i < quadro.length; i++) {
+      desenquadrarContagemDeBytesArray.add(i, quadro[i]);
+    }
+    for (int j = 0; j<desenquadrarContagemDeBytesArray.size();j++) {
+      if ((int) desenquadrarContagemDeBytesArray.get(j) == 11100111){
+        desenquadrarContagemDeBytesArray.remove(j);
+        j--;
+      }
+    }
+    int[] desenquadradoInsercaoDeBytes = new int [desenquadrarContagemDeBytesArray.size()];
+    for (int z = 0; z < desenquadrarContagemDeBytesArray.size();z++){
+      desenquadradoInsercaoDeBytes[z] = (int)desenquadrarContagemDeBytesArray.get(z);
+    }
+    return desenquadradoInsercaoDeBytes;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBytes
   
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBits (int quadro[]){
-  
-    return quadro;
+    ArrayList desenquadrarInsercaoDeBitsArray = new ArrayList<>();
+    for (int i = 0; i < quadro.length; i++) {
+      desenquadrarInsercaoDeBitsArray.add(i, quadro[i]);
+    }
+    for (int j = 0; j<desenquadrarInsercaoDeBitsArray.size();j++) {
+      if ((int) desenquadrarInsercaoDeBitsArray.get(j) == 0111110){
+        desenquadrarInsercaoDeBitsArray.remove(j);
+        j--;
+      }
+    }
+    int[] desenquadradoInsercaoDeBits = new int [desenquadrarInsercaoDeBitsArray.size()];
+    for (int z = 0; z < desenquadrarInsercaoDeBitsArray.size();z++){
+      desenquadradoInsercaoDeBits[z] = (int)desenquadrarInsercaoDeBitsArray.get(z);
+    }
+    return desenquadradoInsercaoDeBits;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoInsercaoDeBits
   
   public int[] CamadaEnlaceDadosReceptoraEnquadramentoViolacaoDaCamadaFisica(int quadro[]){
-  
+    int sinais = quadro.length / 10;
+    int[] quadroVioladoFisicamente = new int[quadro.length - (sinais * 2)];
+    for (int i = 0, j = 0; i < quadro.length; i++, j++) {
+      if (i % 10 == 0) {
+        i += 2;
+      }
+      quadroVioladoFisicamente[j] = quadro[i];
+    }
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosReceptoraEnquadramentoViolacaoDaCamadaFisica
   
