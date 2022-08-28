@@ -2,7 +2,7 @@
 * Autor............: Gustavo Pereira Nunes
 * Matricula........: 202011230
 * Inicio...........: 19/08/2022
-* Ultima alteracao.: /08/2022
+* Ultima alteracao.: 28/08/2022
 * Nome.............: ControleMenu
 * Funcao...........: Controlar a passagem da tela inicial para a tela secundária
 *************************************************************** */

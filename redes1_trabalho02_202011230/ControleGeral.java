@@ -2,7 +2,7 @@
 * Autor............: Gustavo Pereira Nunes
 * Matricula........: 202011230
 * Inicio...........: 19/08/2022
-* Ultima alteracao.: --/08/2022
+* Ultima alteracao.: 28/08/2022
 * Nome.............: ControleGeral
 * Funcao...........: Realiza o funcionamento por completo da interface (tela secundaria)
 *************************************************************** */
@@ -657,28 +657,9 @@ public class ControleGeral {
         quadroEnquadradoContagemDeCaracteres[i] = (int)quadroComContagemDeCaracteres.get(i);
         System.out.print(quadroEnquadradoContagemDeCaracteres[i]);
       }
+      exibirEnquadramentoContagemCaracteres(quadro);
       return quadroEnquadradoContagemDeCaracteres;
     }
-    /*
-    //Dividir em partes
-    ArrayList quandroEnquadrado = new ArrayList<>();
-    int contador = 0;
-    int indexNewPackage = 0;
-    for (int i = 0; i < numerosUsadoParaContagem.size(); i++){
-      for (int j = 0; j < quadroComContagemDeCaracteres.size(); j++) {
-        if ((int) numerosUsadoParaContagem.get(i) == quadroEnquadradoContagemDeCaracteres[j]) {
-          contador = j;
-          ArrayList pacote = new ArrayList<>();
-          while ((int)numerosUsadoParaContagem.get(i+1) != quadroEnquadradoContagemDeCaracteres[contador]){
-            quandroEnquadrado.add(indexNewPackage, quadroEnquadradoContagemDeCaracteres[contador]);
-            contador++;
-          }
-          indexNewPackage++;
-        }
-      }
-    }
-    return quadroEnquadradoContagemDeCaracteres;
-    */
     exibirEnquadramentoContagemCaracteres(quadro);
     return quadro;
   }//Fim do metodo CamadaEnlaceTransmissoraEnquadramentoContagemDeCaracteres
@@ -758,29 +739,9 @@ public class ControleGeral {
         }
         quadroEnquadradoInsercaoDeBytes[i] = (int)newPackage.get(i);
       }
+      exibirEnquadramentoInsercaoDeBytes(quadro);
       return quadroEnquadradoInsercaoDeBytes;
     }
-    
-
-    /*
-    //dividir para conquistar
-
-    int[] quadroFinal = new int [newPackage.size()];
-    int separador = 0;
-    for (int i = 0; i < newPackage.size(); i++) {
-      ArrayList quadroSeparado = new ArrayList<>();
-      for (int j = 0; j < newPackage.size();j++){
-        if (newPackage.get(j).equals('ç')) {
-          separador++;
-          quadroSeparado.add(newPackage);
-        }
-        if (separador == 2) {
-          separador = 0;
-          quadroFinal[i] = quadroSeparado;
-        }
-      }
-    }
-    */
     exibirEnquadramentoInsercaoDeBytes(quadro);
     return quadro;
   }//Fim do metodo CamadaEnlaceDadosTransmissoraEnquadramentoInsercaoDeBytes
