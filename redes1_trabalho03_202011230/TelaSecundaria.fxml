@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="432.0" prefWidth="729.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ControleGeral">
+   <children>
+      <ImageView fitHeight="434.0" fitWidth="742.0" layoutX="-4.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Background.png" />
+         </image>
+      </ImageView>
+      <MenuButton fx:id="menuBarMenuButton" layoutX="42.0" layoutY="82.0" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="26.0" prefWidth="121.0">
+        <items>
+            <MenuItem mnemonicParsing="false" onAction="#binariaMenuItem" text="Binaria" />
+          <MenuItem mnemonicParsing="false" onAction="#manchesterMenuItem" text="Manchester" />
+          <MenuItem mnemonicParsing="false" onAction="#manchesterDiferencialMenuItem" text="Manchester diferencial" />
+        </items>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </MenuButton>
+      <TextArea fx:id="textTextArea" layoutX="39.0" layoutY="229.0" prefHeight="129.0" prefWidth="104.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="TEXT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="receiverTextArea" editable="false" layoutX="600.0" layoutY="229.0" prefHeight="129.0" prefWidth="104.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="asciiTextArea" editable="false" layoutX="187.0" layoutY="227.0" prefHeight="154.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <TextArea fx:id="bitsTextArea" editable="false" layoutX="317.0" layoutY="228.0" prefHeight="154.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
+      </TextArea>
+      <ImageView accessibleRole="BUTTON" fitHeight="27.0" fitWidth="57.0" layoutX="63.0" layoutY="358.0" onMouseClicked="#AplicacaoTransmissora" pickOnBounds="true" preserveRatio="true">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
+      </ImageView>
+      <ScrollPane layoutX="299.0" layoutY="29.0" prefHeight="154.0" prefWidth="250.0" style="-fx-background-color: #FFFFFF;">
+         <content>
+            <HBox fx:id="graphicHBox" prefHeight="150.0" prefWidth="247.0" />
+         </content>
+      </ScrollPane>
+      <MenuButton fx:id="menuBarEnquadro" layoutX="169.0" layoutY="92.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#caractereMenuItem" text="Caractere" />
+          <MenuItem mnemonicParsing="false" onAction="#bytesMenuItem" text="Bytes" />
+            <MenuItem mnemonicParsing="false" onAction="#bitsMenuItem" text="Bits" />
+            <MenuItem mnemonicParsing="false" onAction="#fisicaMenuItem" text="Fisica" />
+        </items>
+         <font>
+            <Font size="10.0" />
+         </font>
+      </MenuButton>
+      <TextArea fx:id="enquadramentoTextArea" editable="false" layoutX="448.0" layoutY="228.0" prefHeight="154.0" prefWidth="121.0" style="-fx-background-color: #FFFFFF;" wrapText="true">
+         <font>
+            <Font size="10.0" />
+         </font></TextArea>
+      <ImageView fx:id="errorImageView" fitHeight="148.0" fitWidth="121.0" layoutX="592.0" layoutY="32.0" pickOnBounds="true" preserveRatio="true" />
+   </children>
+</AnchorPane>
